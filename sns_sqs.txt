@@ -1,0 +1,59 @@
+MyS3Queue
+
+Go to Access policy → Edit
+
+{
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "sns.amazonaws.com"
+      },
+      "Action": "sqs:SendMessage",
+      "Resource": "PASTE-YOUR-SQS-ARN",
+      "Condition": {
+        "ArnEquals": {
+          "aws:SourceArn": "PASTE-YOUR-SNS-ARN"
+        }
+      }
+    }
+  ]
+}
+
+SNS → your topic
+
+Go to Access policy → Edit
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "s3.amazonaws.com"
+      },
+      "Action": "SNS:Publish",
+      "Resource": "PASTE-YOUR-SNS-ARN",
+      "Condition": {
+        "ArnLike": {
+          "aws:SourceArn": "PASTE-YOUR-S3-ARN"
+        },
+        "StringEquals": {
+          "aws:SourceAccount": "YOUR-ACCOUNT-ID"
+        }
+      }
+    }
+  ]
+}
+
+triggered code for lambda
+
+def lambda_handler(event, context):
+
+    for record in event['Records']:
+        print("Message received from SQS:")
+        print(record['body'])
+
+    return {
+        'statusCode': 200,
+        'body': 'Message processed successfully'
+    }
