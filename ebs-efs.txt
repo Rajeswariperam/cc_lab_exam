@@ -1,0 +1,83 @@
+ebs
+
+lsblk
+sudo partprobe
+sudo mkfs.xfs /dev/xvdbd
+sudo mkdir /mnt/raji
+sudo mount /dev/xvdbd /mnt/raji
+df -h
+sudo blkid /dev/xvdbd
+sudo nano /etc/fstab
+
+type in file:
+UUID=" " /mnt/raji xfs defaults,nofail 0 0
+ctrl+o ctrl+enter
+
+sudo mount -a
+cd /mnt/raji
+ls -ld /mnt/raji
+sudo chown ununtu:ubuntu /mnt/raji
+sudo chown ec2-user:ec2-user /mnt/raji
+ls -ld /mnt/raji
+touch f1
+ls
+
+again after detach
+sudo mkdir /mnt/raji
+sudo mount /dev/xvdbd /mnt/raji
+ls /mnt/raji
+
+////////////efs/////////
+image(ami) is linux
+sec groud -> nfs anywhere
+network tab mount 2 subnets 
+
+in 1st terminal
+cd Downloads
+ssh -i EFS.pem ec2-user@PUBLIC-IP-OF-EFS-1(ssh client)
+yes
+sudo su
+mkdir efs
+yum install -y amazon-efs-utils
+ls
+
+//2nd terminal do same
+sudo su
+mkdir efs
+yum install -y amazon-efs-utils
+ls
+
+after this ->click efs->attach->choose mount via dns
+mount -t efs fs-12345678:/ efs(both terminal)
+df -h
+
+on efs-1(1st terminal)
+cd efs
+touch hello.txt
+ls
+
+on efs-1(2 terminal)
+cd efs
+ls
+
+/////////ec2
+Connecting to EC2 Using AWS CloudShell
+1.	Create the EC2 instance using a key pair (.pem).
+2.	Log in to AWS Console and click on the CloudShell icon (terminal icon on the top-right).
+3.	Once CloudShell opens, go to AWS Services → EC2.
+4.	Select your EC2 instance and click Connect.
+5.	Choose the SSH client tab.
+6.	Copy the ssh -i command shown there.
+7.	Paste the command in CloudShell and try to run it.
+❌ It will fail with an error like:
+“key pair is not available / no such file or directory”
+(because the key file is not yet in CloudShell).
+8.	Now, in CloudShell, click on the “+” (Actions) icon on the right side.
+9.	Select Upload file and upload the key pair (.pem) from your local machine.
+10.	After upload, copy the ssh -i command again from EC2 → Connect → SSH client.
+11.	Paste and execute the command in CloudShell.
+12.	✅ You are now successfully connected to the EC2 instance.
+chmod 400 week1.pem
+
+putyygen->instance->ssh ->myip
+rdp->rdp ->myip
